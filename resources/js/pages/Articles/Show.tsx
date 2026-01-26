@@ -1,5 +1,5 @@
-import SiteLayout from '@/layouts/SiteLayout'
 import { Link } from '@inertiajs/react'
+import SiteLayout from '@/layouts/SiteLayout'
 
 interface Article {
     id: number

@@ -1,5 +1,5 @@
-import SiteLayout from '@/layouts/SiteLayout'
 import { Link } from '@inertiajs/react'
+import SiteLayout from '@/layouts/SiteLayout'
 
 interface Article {
     id: number
@@ -18,10 +18,16 @@ interface Article {
     }
 }
 
+interface PaginationLink {
+    url: string | null
+    label: string
+    active: boolean
+}
+
 interface ArticlesIndexProps {
     articles: {
         data: Article[]
-        links: any
+        links: PaginationLink[]
         meta: {
             current_page: number
             last_page: number
@@ -92,7 +98,7 @@ export default function ArticlesIndex({ articles }: ArticlesIndexProps) {
             {/* Pagination */}
             {meta.last_page > 1 && (
                 <div className="flex justify-center gap-2">
-                    {links.map((link: any, index: number) => (
+                    {links.map((link: PaginationLink, index: number) => (
                         <Link
                             key={index}
                             href={link.url || '#'}

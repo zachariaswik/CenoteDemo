@@ -1,13 +1,25 @@
-import { ReactNode } from 'react'
 import { Link } from '@inertiajs/react'
 import { usePage } from '@inertiajs/react'
+import type { ReactNode } from 'react'
+
+interface User {
+    id: number
+    name: string
+    email: string
+}
+
+interface PageProps {
+    auth: {
+        user: User | null
+    }
+}
 
 interface SiteLayoutProps {
     children: ReactNode
 }
 
 export default function SiteLayout({ children }: SiteLayoutProps) {
-    const { auth } = usePage().props as any
+    const { auth } = usePage<PageProps>().props
 
     return (
         <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950">

@@ -1,5 +1,5 @@
-import SiteLayout from '@/layouts/SiteLayout'
 import { Link } from '@inertiajs/react'
+import SiteLayout from '@/layouts/SiteLayout'
 
 interface Article {
     id: number
@@ -24,11 +24,17 @@ interface Category {
     slug: string
 }
 
+interface PaginationLink {
+    url: string | null
+    label: string
+    active: boolean
+}
+
 interface CategoriesShowProps {
     category: Category
     articles: {
         data: Article[]
-        links: any
+        links: PaginationLink[]
         meta: {
             current_page: number
             last_page: number
@@ -113,7 +119,7 @@ export default function CategoriesShow({ category, articles }: CategoriesShowPro
             {/* Pagination */}
             {meta.last_page > 1 && (
                 <div className="flex justify-center gap-2">
-                    {links.map((link: any, index: number) => (
+                    {links.map((link: PaginationLink, index: number) => (
                         <Link
                             key={index}
                             href={link.url || '#'}
