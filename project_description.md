@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Cenote is a fullscreen, kiosk-like learning environment designed for schools and educational institutions. It provides students and teachers with a distraction-free digital space optimized for focused learning. The project is split into two parts: the core application (served via Laravel) and a public-facing product showcase website.
+Cenote is a fullscreen, kiosk designed to create a focused distraction-free learning evnironment. This project is aimed at creating a website for Cenote, where people can learn more about the project, through a public-facing website.
 
 ## Technical Architecture
 
