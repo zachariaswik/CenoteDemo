@@ -254,13 +254,13 @@ Article::with('author')->get();
 |---------|---------|---------|
 | Laravel | 12 | Backend framework |
 | PHP | 8.4.16 | Runtime language |
-| Filament | 3.3 | Admin panel |
+| Filament | 3.3.47 | Admin panel |
 | Inertia | v2 | SPA bridge |
 | React | Latest | Frontend framework |
 | Pest | 4 | Testing framework |
 | Tailwind CSS | Latest | Styling |
 | Vite | Latest | Build tool |
-| Livewire | 3.7 | Admin panel interactivity |
+| Livewire | 3.7.6 | Filament dependency (reactive UI) |
 | Laravel Herd | macOS | Local development |
 
 ## Development Workflow
