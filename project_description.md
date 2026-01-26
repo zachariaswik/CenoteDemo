@@ -254,11 +254,13 @@ Article::with('author')->get();
 |---------|---------|---------|
 | Laravel | 12 | Backend framework |
 | PHP | 8.4.16 | Runtime language |
+| Filament | 3.3 | Admin panel |
 | Inertia | v2 | SPA bridge |
 | React | Latest | Frontend framework |
 | Pest | 4 | Testing framework |
 | Tailwind CSS | Latest | Styling |
 | Vite | Latest | Build tool |
+| Livewire | 3.7 | Admin panel interactivity |
 | Laravel Herd | macOS | Local development |
 
 ## Development Workflow
@@ -313,7 +315,142 @@ php artisan db:seed
 - **Versioning**: Use `laravel/telescope` for debugging production issues
 - **Caching**: Add Redis for frequently-accessed categories/articles
 - **API Layer**: If mobile apps are planned, extract an API resource layer
-- **Admin Panel**: Consider Filament if admin features grow beyond current scope
+
+## Admin Panel with Filament
+
+We've implemented a full-featured admin panel using [Filament PHP](https://filamentphp.com/), a powerful admin panel framework that integrates seamlessly with Laravel and Livewire.
+
+### What Filament Gives You
+
+Filament is like having a seasoned admin panel developer on your team. It provides:
+
+1. **CRUD Resources**: Auto-generated create, read, update, delete interfaces
+2. **Table Management**: Sortable, searchable, filterable data tables out of the box
+3. **Form Builder**: Elegant form components with built-in validation display
+4. **Authentication**: Integrated login page with your Laravel auth
+
+### Architecture Overview
+
+```
+app/Filament/
+├── Resources/
+│   ├── UserResource.php           # Manages users
+│   │   └── Pages/
+│   │       ├── CreateUser.php     # Create form with validation
+│   │       ├── EditUser.php       # Edit form with validation
+│   │       └── ListUsers.php      # Index with search & filters
+│   ├── ArticleResource.php        # Manages articles
+│   │   └── Pages/
+│   │       ├── CreateArticle.php
+│   │       ├── EditArticle.php
+│   │       └── ListArticles.php
+│   └── CategoryResource.php       # Manages categories
+│       └── Pages/
+│           ├── CreateCategory.php
+│           ├── EditCategory.php
+│           └── ListCategories.php
+├── Providers/Filament/
+│   └── AdminPanelProvider.php     # Panel configuration
+```
+
+### Key Features Implemented
+
+#### 1. User Management
+- **Index View**: Searchable by name and email, filterable by email verification status
+- **Create/Edit**: Name, email, and password fields with proper validation
+- **Security**: Password hashing handled automatically
+
+#### 2. Article Management
+- **Index View**: 
+  - Searchable by title, category, and author
+  - Filterable by category, author, published/draft status
+- **Create/Edit**: 
+  - Auto-generated slug from title
+  - Rich text editor for content
+  - Category and author dropdown selects with search
+  - Date picker for publish date
+
+#### 3. Category Management
+- **Index View**: Searchable by name and slug, shows article count
+- **Create/Edit**: Auto-generated slug from name
+
+### Using Laravel Form Requests for Validation
+
+The issue requirement was to "Use the Request object of Laravel for the validation of the data." Here's how we implemented this:
+
+**Form Request Classes:**
+```php
+// app/Http/Requests/StoreUserRequest.php
+class StoreUserRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
+        ];
+    }
+}
+```
+
+**Integration in Filament Pages:**
+```php
+// app/Filament/Resources/UserResource/Pages/CreateUser.php
+protected function mutateFormDataBeforeCreate(array $data): array
+{
+    $request = new StoreUserRequest;
+    $validator = Validator::make($data, $request->rules());
+    $validator->validate();  // Throws ValidationException on failure
+
+    return $data;
+}
+```
+
+**Why this approach?**
+1. **Separation of Concerns**: Validation logic lives in dedicated Request classes
+2. **Reusability**: Same rules can be used for API endpoints if needed
+3. **Consistency**: Single source of truth for validation rules
+4. **Testability**: Request classes can be unit tested independently
+
+### Testing the Admin Panel
+
+Filament provides excellent testing utilities through Livewire. Our tests verify:
+
+- **List Operations**: Records appear in tables, search works, filters work
+- **Create Operations**: Valid data succeeds, invalid data shows errors
+- **Edit Operations**: Existing data loads correctly, updates persist
+- **Delete Operations**: Records are removed from database
+
+**Example Test:**
+```php
+it('can search articles by title', function () {
+    $articles = Article::factory()->count(10)->create();
+    $searchArticle = $articles->first();
+
+    Livewire::test(ListArticles::class)
+        ->searchTable($searchArticle->title)
+        ->assertCanSeeTableRecords([$searchArticle]);
+});
+```
+
+### Lessons Learned
+
+1. **Filament's Learning Curve is Worth It**: Initial setup takes an hour, but you save days of building admin interfaces.
+
+2. **Form Request Integration Takes Thought**: Filament has its own validation, but integrating Laravel Request classes requires manual wiring in the `mutateFormDataBefore*` methods.
+
+3. **Livewire Testing is Powerful**: The `assertCanSeeTableRecords()`, `searchTable()`, and `filterTable()` methods make testing table functionality a breeze.
+
+4. **Auto-Slug Generation**: Using `live(onBlur: true)` with `afterStateUpdated()` creates a great UX for slug fields:
+   ```php
+   Forms\Components\TextInput::make('title')
+       ->live(onBlur: true)
+       ->afterStateUpdated(fn ($state, Forms\Set $set) => 
+           $set('slug', Str::slug($state)))
+   ```
+
+5. **RichEditor vs Textarea**: Filament's `RichEditor` component provides formatting options out of the box—no external WYSIWYG integration needed.
 
 ---
 
