@@ -17,6 +17,14 @@ class Category extends Model
     ];
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
      * Get the articles for this category.
      */
     public function articles(): HasMany

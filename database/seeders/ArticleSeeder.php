@@ -19,17 +19,25 @@ class ArticleSeeder extends Seeder
         DB::table('articles')->truncate();
         DB::table('categories')->truncate();
 
+        // Reset the unique state for the factory
+        \Illuminate\Support\Facades\DB::statement('DELETE FROM sqlite_sequence WHERE name = ?', ['categories']);
+
         // Create 3-5 categories
-        $categories = Category::factory(fake()->numberBetween(3, 5))->create();
+        $categoryCount = fake()->numberBetween(3, 5);
+        $categories = Category::factory($categoryCount)->create();
 
         // Create 3-8 authors (users)
-        $authors = User::factory(fake()->numberBetween(3, 8))->create();
+        $authorCount = fake()->numberBetween(3, 8);
+        $authors = User::factory($authorCount)->create();
 
-        // Create 20 articles
-        Article::factory(20)->make()->each(function (Article $article) use ($categories, $authors) {
-            $article->category_id = $categories->random()->id;
-            $article->author_id = $authors->random()->id;
-            $article->save();
-        });
+        // Create 20 published articles with proper relationships
+        for ($i = 0; $i < 20; $i++) {
+            Article::factory()
+                ->published()
+                ->create([
+                    'category_id' => $categories->random()->id,
+                    'author_id' => $authors->random()->id,
+                ]);
+        }
     }
 }

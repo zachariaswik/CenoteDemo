@@ -16,7 +16,13 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->word();
+        static $usedWords = [];
+        
+        do {
+            $name = fake()->word();
+        } while (in_array($name, $usedWords));
+        
+        $usedWords[] = $name;
 
         return [
             'name' => ucfirst($name),
