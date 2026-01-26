@@ -3,11 +3,9 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return view('pages.home');
 })->name('home');
 
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
@@ -18,7 +16,7 @@ Route::get('/categories/{category}', [CategoryController::class, 'show'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        return redirect('/admin');
     })->name('dashboard');
 });
 

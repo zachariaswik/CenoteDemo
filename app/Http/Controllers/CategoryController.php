@@ -3,34 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Inertia\Inertia;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of categories.
      */
-    public function index()
+    public function index(): View
     {
-        return Inertia::render('Categories/Index', [
-            'categories' => Category::withCount(['articles' => function ($query) {
-                $query->whereNotNull('published_at');
-            }])->get(),
-        ]);
+        $categories = Category::withCount(['articles' => function ($query) {
+            $query->whereNotNull('published_at');
+        }])->get();
+
+        return view('pages.categories.index', compact('categories'));
     }
 
     /**
      * Display the specified category with its articles.
      */
-    public function show(Category $category)
+    public function show(Category $category): View
     {
-        return Inertia::render('Categories/Show', [
-            'category' => $category,
-            'articles' => $category->articles()
-                ->with('category', 'author')
-                ->whereNotNull('published_at')
-                ->orderBy('published_at', 'desc')
-                ->paginate(12),
-        ]);
+        $articles = $category->articles()
+            ->with('category', 'author')
+            ->whereNotNull('published_at')
+            ->orderBy('published_at', 'desc')
+            ->paginate(12);
+
+        return view('pages.categories.show', compact('category', 'articles'));
     }
 }

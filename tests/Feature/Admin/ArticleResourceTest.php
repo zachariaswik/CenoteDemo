@@ -170,7 +170,7 @@ it('can render edit article page', function () {
     $this->actingAs($user);
 
     Livewire::test(EditArticle::class, [
-        'record' => $article->id,
+        'record' => $article->slug,
     ])
         ->assertSuccessful();
 });
@@ -182,7 +182,7 @@ it('can update an article', function () {
     $this->actingAs($user);
 
     Livewire::test(EditArticle::class, [
-        'record' => $article->id,
+        'record' => $article->slug,
     ])
         ->fillForm([
             'title' => 'Updated Title',
@@ -205,7 +205,7 @@ it('can delete an article', function () {
     $this->actingAs($user);
 
     Livewire::test(EditArticle::class, [
-        'record' => $article->id,
+        'record' => $article->slug,
     ])
         ->callAction(DeleteAction::class);
 

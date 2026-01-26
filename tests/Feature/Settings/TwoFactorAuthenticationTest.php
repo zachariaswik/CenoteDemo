@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
 
 test('two factor settings page can be rendered', function () {
@@ -19,10 +18,9 @@ test('two factor settings page can be rendered', function () {
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('two-factor.show'))
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('settings/two-factor')
-            ->where('twoFactorEnabled', false)
-        );
+        ->assertOk()
+        ->assertSee('Two-Factor Authentication')
+        ->assertSee('Disabled');
 });
 
 test('two factor settings page requires password confirmation when enabled', function () {
@@ -58,9 +56,7 @@ test('two factor settings page does not requires password confirmation when disa
     $this->actingAs($user)
         ->get(route('two-factor.show'))
         ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('settings/two-factor')
-        );
+        ->assertSee('Two-Factor Authentication');
 });
 
 test('two factor settings page returns forbidden response when two factor is disabled', function () {
