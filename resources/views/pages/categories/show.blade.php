@@ -36,8 +36,8 @@
 
                         {{-- Meta --}}
                         <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
-                            <span>By {{ $article->author->name }}</span>
-                            <span>{{ $article->published_at->format('M d, Y') }}</span>
+                            <span>By {{ $article->author?->name ?? 'Unknown' }}</span>
+                            <span>{{ $article->published_at?->format('M d, Y') ?? '' }}</span>
                         </div>
                     </div>
                 </a>

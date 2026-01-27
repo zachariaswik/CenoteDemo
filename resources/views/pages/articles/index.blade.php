@@ -16,11 +16,13 @@
                    class="group block bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-lg dark:hover:shadow-blue-900/20 transition">
                     <div class="p-6">
                         {{-- Category Badge --}}
-                        <div class="mb-3">
-                            <span class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold rounded-full">
-                                {{ $article->category->name }}
-                            </span>
-                        </div>
+                        @if($article->category)
+                            <div class="mb-3">
+                                <span class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold rounded-full">
+                                    {{ $article->category->name }}
+                                </span>
+                            </div>
+                        @endif
 
                         {{-- Title --}}
                         <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition line-clamp-2">
@@ -34,8 +36,8 @@
 
                         {{-- Meta --}}
                         <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
-                            <span>By {{ $article->author->name }}</span>
-                            <span>{{ $article->published_at->format('M d, Y') }}</span>
+                            <span>By {{ $article->author?->name ?? 'Unknown' }}</span>
+                            <span>{{ $article->published_at?->format('M d, Y') ?? '' }}</span>
                         </div>
                     </div>
                 </a>
