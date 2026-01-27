@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
         static $usedWords = [];
         
         do {
-            $name = fake()->word();
+            $name = $this->faker->word();
         } while (in_array($name, $usedWords));
         
         $usedWords[] = $name;

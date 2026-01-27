@@ -20,14 +20,14 @@ class ArticleFactory extends Factory
      */
     public function definition(): array
     {
-        $title = fake()->sentence();
+        $title = $this->faker->sentence();
 
         return [
             'title' => $title,
             'slug' => Str::slug($title),
-            'content' => fake()->paragraphs(asText: true),
-            'excerpt' => fake()->sentence(15),
-            'published_at' => fake()->optional(0.7)->dateTime(),
+            'content' => $this->faker->paragraphs(asText: true),
+            'excerpt' => $this->faker->sentence(15),
+            'published_at' => $this->faker->optional(0.7)->dateTime(),
             'category_id' => Category::factory(),
             'author_id' => User::factory(),
         ];
@@ -39,7 +39,7 @@ class ArticleFactory extends Factory
     public function published(): static
     {
         return $this->state(fn (array $attributes) => [
-            'published_at' => fake()->dateTime(),
+            'published_at' => $this->faker->dateTime(),
         ]);
     }
 
