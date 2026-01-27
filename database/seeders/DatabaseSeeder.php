@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // Create additional random users (5-7 more)
-        User::factory(fake()->numberBetween(5, 7))->create();
+        User::factory(rand(5, 7))->create();
 
         $this->call(ArticleSeeder::class);
     }
