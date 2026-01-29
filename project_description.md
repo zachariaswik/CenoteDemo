@@ -7,11 +7,10 @@ Cenote is a fullscreen, kiosk designed to create a focused distraction-free lear
 ## Technical Architecture
 
 ### Frontend Stack
-- **Framework**: React via Inertia.js v2 (TypeScript)
-- **Bundler**: Vite
-- **Type Safety**: Wayfinder (generates type-safe route functions)
+- **Framework**: Blade templates (Laravel views)
+- **Bundler**: Vite (CSS assets)
 - **Styling**: Tailwind CSS
-- **State Management**: Inertia's built-in reactivity
+- **Interactivity**: Vanilla JavaScript where needed
 
 ### Backend Stack
 - **Framework**: Laravel 12 (PHP 8.4)
@@ -31,7 +30,7 @@ Cenote is a fullscreen, kiosk designed to create a focused distraction-free lear
 
 ## Codebase Structure
 
-### Core Architecture Pattern: MVC + Inertia
+### Core Architecture Pattern: MVC + Blade
 
 ```
 app/
@@ -71,27 +70,27 @@ The application uses three core models with relationships:
 User (author) --has many--> Article --belongs to--> Category
 ```
 
-### Frontend Architecture: Inertia + React
+### Frontend Architecture: Blade Views
 
-Inertia bridges the gap between Laravel and React. Instead of building an API, we pass data directly to React components:
+Server-rendered Blade views keep the stack simple and fast while still allowing progressive enhancement with JavaScript.
 
 ```php
 // Backend (routes/web.php)
 Route::get('/articles', function () {
-    return Inertia::render('Articles/Index', [
-        'articles' => Article::with('category', 'author')->paginate(),
-    ]);
+  return view('articles.index', [
+    'articles' => Article::with('category', 'author')->paginate(),
+  ]);
 });
 ```
 
-```typescript
-// Frontend (resources/js/Pages/Articles/Index.tsx)
-export default function Index({ articles }) {
-    return <div>{articles.map(article => ...)}</div>
-}
+```blade
+{{-- Frontend (resources/views/articles/index.blade.php) --}}
+@foreach ($articles as $article)
+  <div>{{ $article->title }}</div>
+@endforeach
 ```
 
-**Why Inertia?** It gives you SPA-like interactivity without the complexity of a separate API. One language for routing, one mental model, and automatic type-safety via Wayfinder.
+**Why Blade?** Server-rendered pages are straightforward to maintain, work well with Laravel's routing, and keep the UI lightweight.
 
 ## Technical Decisions & Rationale
 
@@ -254,8 +253,6 @@ Article::with('author')->get();
 |---------|---------|---------|
 | Laravel | 12 | Backend framework |
 | PHP | 8.4.16 | Runtime language |
-| Inertia | v2 | SPA bridge |
-| React | Latest | Frontend framework |
 | Pest | 4 | Testing framework |
 | Tailwind CSS | Latest | Styling |
 | Vite | Latest | Build tool |
@@ -268,8 +265,8 @@ Article::with('author')->get();
 2. **Create the model**: `php artisan make:model ModelName --factory`
 3. **Update the factory**: Add realistic fake data generators
 4. **Create tests**: `php artisan make:test FeatureTest --pest`
-5. **Build the controller**: Use `Inertia::render()` for responses
-6. **Create the React component**: In `resources/js/Pages/`
+5. **Build the controller**: Return a Blade view with data
+6. **Create the Blade view**: In `resources/views/`
 7. **Run tests**: `php artisan test --compact`
 8. **Format code**: `vendor/bin/pint --dirty`
 

@@ -30,7 +30,7 @@ it('can list articles', function () {
 it('can search articles by title', function () {
     $user = User::factory()->create();
     $searchableArticle = Article::factory()->create(['title' => 'Laravel Guide']);
-    $otherArticle = Article::factory()->create(['title' => 'React Tutorial']);
+    $otherArticle = Article::factory()->create(['title' => 'UI Tutorial']);
 
     $this->actingAs($user);
 
