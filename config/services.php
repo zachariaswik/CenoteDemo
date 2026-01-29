@@ -35,6 +35,10 @@ return [
         ],
     ],
 
+    'serpapi' => [
+        'api_key' => env('SERPAPI_API_KEY'),
+    ],
+
     'posthog' => [
         'api_key' => env('POSTHOG_API_KEY'),
         'host' => env('POSTHOG_HOST', 'https://eu.i.posthog.com'),
