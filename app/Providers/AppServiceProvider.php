@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Services\PostHogService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use PostHog\PostHog;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(PostHogService::class);
     }
 
     /**
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configurePostHog();
     }
 
     protected function configureDefaults(): void
@@ -43,5 +46,15 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+    }
+
+    protected function configurePostHog(): void
+    {
+        if (config('services.posthog.api_key')) {
+            PostHog::init(
+                config('services.posthog.api_key'),
+                ['host' => config('services.posthog.host')]
+            );
+        }
     }
 }
