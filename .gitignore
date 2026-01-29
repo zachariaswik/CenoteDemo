@@ -10,6 +10,7 @@
 /storage/*.key
 /storage/pail
 /vendor
+/tests/Browser/Screenshots
 .DS_Store
 .env
 .env.backup
