@@ -23,4 +23,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
+// Email reset routes
+Route::get('/forgot-email', [\App\Http\Controllers\EmailResetController::class, 'showForgotEmailForm'])->name('email.reset.request');
+Route::post('/forgot-email', [\App\Http\Controllers\EmailResetController::class, 'sendResetEmail'])->name('email.reset.send');
+
 require __DIR__.'/settings.php';
