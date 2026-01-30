@@ -13,7 +13,7 @@ A distraction-free knowledge-sharing platform for educators and learners.
 ## Tech Stack
 
 **Frontend:** Blade templates, Tailwind CSS v4, Vite, Vanilla JavaScript  
-**Backend:** Laravel 12, PHP 8.2+, SQLite/MySQL/PostgreSQL, Eloquent ORM  
+**Backend:** Laravel 12, PHP 8.2+, SQLite/MySQL, Eloquent ORM  
 **Testing:** Pest 4, Laravel Pint
 
 ## Quick Start
@@ -26,7 +26,7 @@ php artisan migrate:fresh --seed
 composer dev
 ```
 
-Visit `http://localhost:8000`
+Visit `cenote.test`
 
 ## Common Commands
 
